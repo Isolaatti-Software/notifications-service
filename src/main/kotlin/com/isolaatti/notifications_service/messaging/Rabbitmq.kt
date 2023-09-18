@@ -1,4 +1,4 @@
-package messaging
+package com.isolaatti.notifications_service.messaging
 
 import com.rabbitmq.client.Connection
 import com.rabbitmq.client.ConnectionFactory

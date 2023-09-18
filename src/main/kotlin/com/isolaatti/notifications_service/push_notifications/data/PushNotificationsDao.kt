@@ -1,16 +1,14 @@
-package push_notifications.data
+package com.isolaatti.notifications_service.push_notifications.data
 
-import persistence.Database
+import com.isolaatti.notifications_service.persistence.Database
 import java.sql.SQLException
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
 class PushNotificationsDao {
 
     fun getFcmTokens(userId: Int): List<String>  {
         val list: MutableList<String> = mutableListOf()
         try {
-            Database.getConnection().use {connection ->
+            Database.getConnection().use { connection ->
                 val query = "SELECT token FROM fcm WHERE userId = ?"
                 val preparedStatement = connection.prepareStatement(query)
                 preparedStatement.setInt(1,userId)

@@ -1,10 +1,9 @@
+package com.isolaatti.notifications_service
+
 import com.rabbitmq.client.AMQP
 import com.rabbitmq.client.DefaultConsumer
 import com.rabbitmq.client.Envelope
-import kotlinx.coroutines.runBlocking
-import messaging.Rabbitmq
-import push_notifications.data.PushNotificationsDao
-import push_notifications.domain.NotificationSender
+import com.isolaatti.notifications_service.messaging.Rabbitmq
 import kotlin.jvm.optionals.getOrNull
 
 object Main {

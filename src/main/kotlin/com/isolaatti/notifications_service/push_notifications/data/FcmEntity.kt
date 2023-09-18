@@ -1,4 +1,4 @@
-package push_notifications.data
+package com.isolaatti.notifications_service.push_notifications.data
 
 data class FcmEntity(
     val id: Long,
