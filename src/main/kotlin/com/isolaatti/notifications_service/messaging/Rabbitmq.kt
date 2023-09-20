@@ -1,19 +1,23 @@
 package com.isolaatti.notifications_service.messaging
 
+import com.isolaatti.notifications_service.Config
 import com.rabbitmq.client.Connection
 import com.rabbitmq.client.ConnectionFactory
 
 object Rabbitmq {
+    private const val CONNECTION_NAME = "notifications_service"
+
     val connection: Connection by lazy {
         val connectionFactory = ConnectionFactory()
 
+        val rabbitmqConfig = Config.config.rabbitmqConfig
         connectionFactory.apply {
-            username = "erik"
-            password = "password"
-            virtualHost = "/"
-            host = "10.0.0.12"
-            port = 5672
+            username = rabbitmqConfig.username
+            password = rabbitmqConfig.password
+            virtualHost = rabbitmqConfig.virtualHost
+            host = rabbitmqConfig.host
+            port = rabbitmqConfig.port
         }
-        connectionFactory.newConnection("notifications_service")
+        connectionFactory.newConnection(CONNECTION_NAME)
     }
 }
