@@ -10,17 +10,13 @@ import com.sendgrid.helpers.mail.objects.Email
 import java.io.IOException
 
 class EmailSenderImpl : EmailSender {
-    companion object {
-        const val EMAIL_ADDRESS = "notifications@isolaatti.com"
-        const val EMAIL_NAME = "Isolaatti"
-    }
 
     private val sendgrid = SendGrid(Config.config.sendgridApiKey)
-    override fun sendEmailToAddress(address: String, subject: String, username: String, htmlBody: String, plainTextBody: String) {
-        val to = Email(address, username)
-        val from = Email(EMAIL_ADDRESS, EMAIL_NAME)
-        val content = Content("text/html", htmlBody)
-        val mail = Mail(from, subject, to, content)
+    override fun sendEmailToAddress(emailDto: EmailDto) {
+        val to = Email(emailDto.toAddress, emailDto.toName)
+        val from = Email(emailDto.fromAddress, emailDto.fromName)
+        val content = Content("text/html", emailDto.htmlBody)
+        val mail = Mail(from, emailDto.subject, to, content)
 
         val request = Request()
 
@@ -30,8 +26,9 @@ class EmailSenderImpl : EmailSender {
             request.body = mail.build()
 
             sendgrid.api(request)
-        } catch(_: IOException) {
-            // TODO log this
+        } catch(e: IOException) {
+            println("Error sending email")
+            e.printStackTrace()
         }
     }
 }
