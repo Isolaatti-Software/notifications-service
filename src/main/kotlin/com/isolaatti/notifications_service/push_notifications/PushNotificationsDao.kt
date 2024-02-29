@@ -36,7 +36,7 @@ class PushNotificationsDao {
         try {
             Database.getConnection().use { connection ->
                 val query = """
-            INSERT INTO fcm (id, userId, sessionId, token) VALUES (?, ?, ?) 
+            INSERT INTO fcm (userId, sessionId, token) VALUES (?, ?, ?) 
             ON CONFLICT (sessionId) DO UPDATE SET token = EXCLUDED.token
             """.trimIndent()
 
