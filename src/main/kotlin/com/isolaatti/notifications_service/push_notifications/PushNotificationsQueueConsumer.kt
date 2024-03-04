@@ -13,8 +13,15 @@ class PushNotificationsQueueConsumer(channel: Channel?) : DefaultConsumer(channe
         properties: AMQP.BasicProperties?,
         body: ByteArray?
     ) {
-        val stringBody = body?.decodeToString() ?: return
-        val dto = Json.decodeFromString<PushNotificationDto>(stringBody)
-        notificationSender.sendNotificationToSingleUser(dto.userId, dto.sessionId, dto.title, dto.body, dto.imageUrl, dto.url)
+        try {
+            val stringBody = body?.decodeToString() ?: return
+            val dto = Json.decodeFromString<PushNotificationDto>(stringBody)
+            println(stringBody)
+            notificationSender.sendNotificationToSingleUser(dto)
+        } catch(jsonException: Exception)  {
+            println(jsonException.message)
+        }
+
+
     }
 }

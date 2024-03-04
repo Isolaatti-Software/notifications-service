@@ -7,30 +7,17 @@ import com.google.firebase.messaging.Notification
 class NotificationSenderImpl(private val pushNotificationsDao: PushNotificationsDao) : NotificationSender {
 
     private val cloudMessaging = FirebaseMessaging.getInstance()
-    override fun sendNotificationToSingleUser(
-        userId: Int,
-        sessionId: String,
-        title: String,
-        body: String,
-        imageUrl: String?,
-        url: String
-    ) {
-        val tokens = pushNotificationsDao.getFcmTokens(userId)
-        val notification = Notification.builder().apply {
-            setTitle(title)
-            setBody(body)
-            if(imageUrl != null) {
-                setImage(imageUrl)
-            }
-        }.build()
+    override fun sendNotificationToSingleUser(pushNotificationDto: PushNotificationDto) {
+        val tokens = pushNotificationsDao.getFcmTokens(pushNotificationDto.userId)
+        val notification = Notification.builder().build()
 
         val message = MulticastMessage.builder()
             .setNotification(notification)
-            .putData("url", url)
+            .putAllData(pushNotificationDto.toMap())
             .addAllTokens(tokens)
             .build()
 
-        cloudMessaging.sendEachForMulticast(message)
+        val response = cloudMessaging.sendEachForMulticast(message)
     }
 
     override fun sendNotificationToUsers(userIds: Array<Int>, jsonData: String) {
