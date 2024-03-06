@@ -57,6 +57,20 @@ class PushNotificationsDao {
 
     }
 
+    fun removeTokens(tokens: Array<String>) {
+        Database.getConnection().use { connection ->
+            val query = """
+                DELETE FROM fcm WHERE token = any(?)
+            """.trimIndent()
+
+            val preparedQuery = connection.prepareStatement(query)
+
+            preparedQuery.setArray(1, connection.createArrayOf("varchar",tokens))
+            println(preparedQuery.toString())
+            preparedQuery.execute()
+        }
+    }
+
 
 
 }

@@ -17,7 +17,22 @@ class NotificationSenderImpl(private val pushNotificationsDao: PushNotifications
             .addAllTokens(tokens)
             .build()
 
-        val response = cloudMessaging.sendEachForMulticast(message)
+        val multicastResponse = cloudMessaging.sendEachForMulticast(message)
+
+        val tokensToRemove: MutableList<String> = mutableListOf()
+
+        multicastResponse.responses.forEachIndexed { index, response ->
+
+            // invalid tokens must be removed
+            if(response?.isSuccessful == false) {
+                tokensToRemove.add(tokens[index])
+            }
+        }
+        if(tokensToRemove.isNotEmpty()) {
+            println("Removing invalid tokens: $tokensToRemove")
+            pushNotificationsDao.removeTokens(tokensToRemove.toTypedArray())
+        }
+
     }
 
     override fun sendNotificationToUsers(userIds: Array<Int>, jsonData: String) {
